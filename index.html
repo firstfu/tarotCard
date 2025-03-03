@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>塔羅智慧 - AI 塔羅牌占卜平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              mystic: {
+                50: "#f5f3ff",
+                100: "#ede9fe",
+                200: "#ddd6fe",
+                300: "#c4b5fd",
+                400: "#a78bfa",
+                500: "#8b5cf6",
+                600: "#7c3aed",
+                700: "#6d28d9",
+                800: "#5b21b6",
+                900: "#4c1d95",
+                950: "#2e1065",
+              },
+              midnight: {
+                50: "#edf2fc",
+                100: "#dde6f3",
+                200: "#c0d1e8",
+                300: "#9ab3d8",
+                400: "#718dc3",
+                500: "#5a74af",
+                600: "#465c94",
+                700: "#384878",
+                800: "#2f3d64",
+                900: "#1a2035",
+                950: "#0d101c",
+              },
+              gold: {
+                100: "#fff7cc",
+                200: "#ffeaa3",
+                300: "#ffdc7a",
+                400: "#ffd152",
+                500: "#ffc229",
+                600: "#e6ad1f",
+                700: "#cc9919",
+                800: "#b38414",
+                900: "#99700f",
+              },
+            },
+            fontFamily: {
+              serif: ['"Noto Serif TC"', "serif"],
+              sans: ['"Noto Sans TC"', "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background: linear-gradient(to bottom, #0d101c, #2e1065);
+        min-height: 100vh;
+        font-family: "Noto Sans TC", sans-serif;
+      }
+      .tarot-title {
+        font-family: "Noto Serif TC", serif;
+      }
+      .stars {
+        background-image: radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0, 0, 0, 0)), radial-gradient(2px 2px at 40px 70px, #ffffff, rgba(0, 0, 0, 0)),
+          radial-gradient(2px 2px at 60px 110px, #ffffff, rgba(0, 0, 0, 0)), radial-gradient(2px 2px at 80px 150px, #ffffff, rgba(0, 0, 0, 0));
+        background-size: 200px 200px;
+      }
+    </style>
+  </head>
+  <body class="text-white relative overflow-x-hidden">
+    <!-- 星空背景 -->
+    <div class="stars absolute inset-0 opacity-50"></div>
+
+    <!-- 導航欄 -->
+    <nav class="relative z-10 bg-midnight-900/80 backdrop-blur-md">
+      <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center">
+          <span class="tarot-title text-2xl font-bold text-gold-300">塔羅智慧</span>
+        </div>
+        <div class="hidden md:flex space-x-6">
+          <a href="#" class="hover:text-gold-300 transition-colors">首頁</a>
+          <a href="#" class="hover:text-gold-300 transition-colors">占卜服務</a>
+          <a href="#" class="hover:text-gold-300 transition-colors">塔羅牌庫</a>
+          <a href="#" class="hover:text-gold-300 transition-colors">會員方案</a>
+          <a href="#" class="hover:text-gold-300 transition-colors">關於我們</a>
+        </div>
+        <div class="flex items-center space-x-4">
+          <a href="#" class="px-4 py-2 rounded-md border border-gold-400 text-gold-300 hover:bg-gold-400 hover:text-midnight-900 transition-colors">登入</a>
+          <a href="#" class="px-4 py-2 rounded-md bg-gold-400 text-midnight-900 hover:bg-gold-500 transition-colors">註冊</a>
+          <button class="md:hidden text-2xl">☰</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 主要內容區 -->
+    <main class="relative z-10 container mx-auto px-4 py-12">
+      <!-- 英雄區塊 -->
+      <section class="py-16 flex flex-col items-center text-center">
+        <h1 class="tarot-title text-4xl md:text-6xl font-bold mb-6 text-gold-300">塔羅智慧：AI 指引你的未來</h1>
+        <p class="max-w-2xl mx-auto text-lg mb-10 text-gray-200">結合古老塔羅智慧與現代 AI 技術，為你提供個人化的占卜體驗和精準解讀</p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="#" class="px-8 py-3 rounded-md bg-gold-400 text-midnight-900 font-bold hover:bg-gold-500 transition-colors"> 立即占卜 </a>
+          <a href="#" class="px-8 py-3 rounded-md border border-white text-white hover:bg-white/10 transition-colors"> 了解更多 </a>
+        </div>
+      </section>
+
+      <!-- 功能介紹 -->
+      <section class="py-16">
+        <h2 class="tarot-title text-3xl font-bold text-center mb-12 text-gold-300">平台特色</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-midnight-800/70 backdrop-blur-md p-6 rounded-lg hover:transform hover:-translate-y-1 transition-transform">
+            <div class="text-4xl mb-4 text-gold-300">🔮</div>
+            <h3 class="text-xl font-bold mb-3">AI 智能解讀</h3>
+            <p class="text-gray-300">運用先進 AI 技術，根據古老塔羅牌義，提供個人專屬、深入的命運解析</p>
+          </div>
+          <div class="bg-midnight-800/70 backdrop-blur-md p-6 rounded-lg hover:transform hover:-translate-y-1 transition-transform">
+            <div class="text-4xl mb-4 text-gold-300">🌙</div>
+            <h3 class="text-xl font-bold mb-3">多種牌陣選擇</h3>
+            <p class="text-gray-300">從簡單的單張牌到複雜的凱爾特十字牌陣，滿足不同問題與需求</p>
+          </div>
+          <div class="bg-midnight-800/70 backdrop-blur-md p-6 rounded-lg hover:transform hover:-translate-y-1 transition-transform">
+            <div class="text-4xl mb-4 text-gold-300">📚</div>
+            <h3 class="text-xl font-bold mb-3">完整塔羅資料庫</h3>
+            <p class="text-gray-300">收錄全部 78 張塔羅牌的詳細解釋，包含正位與逆位意義</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 占卜類型 -->
+      <section class="py-16">
+        <h2 class="tarot-title text-3xl font-bold text-center mb-12 text-gold-300">選擇你的占卜</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- 愛情占卜 -->
+          <div class="group relative bg-gradient-to-br from-mystic-800/70 to-midnight-800/70 backdrop-blur-md rounded-lg overflow-hidden cursor-pointer">
+            <div class="p-6 z-10 relative">
+              <h3 class="text-2xl font-bold mb-3 text-pink-300">愛情塔羅</h3>
+              <p class="text-gray-300 mb-6">揭示你的愛情運勢，找到理想伴侶或改善現有關係</p>
+              <a href="#" class="inline-block px-4 py-2 bg-pink-500/30 border border-pink-400 rounded-md hover:bg-pink-500/50 transition-colors"> 開始占卜 </a>
+            </div>
+            <div class="absolute inset-0 bg-[url('https://placeholder.com/love-tarot')] opacity-10 group-hover:opacity-20 transition-opacity"></div>
+          </div>
+          <!-- 事業占卜 -->
+          <div class="group relative bg-gradient-to-br from-mystic-800/70 to-midnight-800/70 backdrop-blur-md rounded-lg overflow-hidden cursor-pointer">
+            <div class="p-6 z-10 relative">
+              <h3 class="text-2xl font-bold mb-3 text-blue-300">事業塔羅</h3>
+              <p class="text-gray-300 mb-6">洞察職場機遇與挑戰，指引你的職業發展方向</p>
+              <a href="#" class="inline-block px-4 py-2 bg-blue-500/30 border border-blue-400 rounded-md hover:bg-blue-500/50 transition-colors"> 開始占卜 </a>
+            </div>
+            <div class="absolute inset-0 bg-[url('https://placeholder.com/career-tarot')] opacity-10 group-hover:opacity-20 transition-opacity"></div>
+          </div>
+          <!-- 財運占卜 -->
+          <div class="group relative bg-gradient-to-br from-mystic-800/70 to-midnight-800/70 backdrop-blur-md rounded-lg overflow-hidden cursor-pointer">
+            <div class="p-6 z-10 relative">
+              <h3 class="text-2xl font-bold mb-3 text-yellow-300">財運塔羅</h3>
+              <p class="text-gray-300 mb-6">預測財務運勢，提供理財建議與投資指引</p>
+              <a href="#" class="inline-block px-4 py-2 bg-yellow-500/30 border border-yellow-400 rounded-md hover:bg-yellow-500/50 transition-colors">
+                開始占卜
+              </a>
+            </div>
+            <div class="absolute inset-0 bg-[url('https://placeholder.com/wealth-tarot')] opacity-10 group-hover:opacity-20 transition-opacity"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA 區塊 -->
+      <section class="py-16 bg-gradient-to-r from-mystic-900/50 to-midnight-900/50 backdrop-blur-md rounded-xl p-8 text-center">
+        <h2 class="tarot-title text-3xl font-bold mb-6 text-gold-300">開始你的塔羅之旅</h2>
+        <p class="max-w-2xl mx-auto text-lg mb-8 text-gray-200">註冊會員即可獲得一次免費占卜，解鎖更多專業解讀功能</p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="#" class="px-8 py-3 rounded-md bg-gold-400 text-midnight-900 font-bold hover:bg-gold-500 transition-colors"> 立即註冊 </a>
+          <a href="#" class="px-8 py-3 rounded-md border border-white text-white hover:bg-white/10 transition-colors"> 探索會員方案 </a>
+        </div>
+      </section>
+    </main>
+
+    <!-- 頁腳 -->
+    <footer class="relative z-10 bg-midnight-950 py-8">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div>
+            <h3 class="tarot-title text-xl font-bold mb-4 text-gold-300">塔羅智慧</h3>
+            <p class="text-gray-400">結合古老智慧與現代科技，引領你探索命運的奧秘</p>
+          </div>
+          <div>
+            <h4 class="font-bold mb-4">快速連結</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li><a href="#" class="hover:text-gold-300">首頁</a></li>
+              <li><a href="#" class="hover:text-gold-300">占卜服務</a></li>
+              <li><a href="#" class="hover:text-gold-300">塔羅牌庫</a></li>
+              <li><a href="#" class="hover:text-gold-300">會員方案</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-bold mb-4">聯絡我們</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li>客服信箱：support@tarotwisdom.com</li>
+              <li>營業時間：週一至週五 09:00-18:00</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-bold mb-4">追蹤我們</h4>
+            <div class="flex space-x-4">
+              <a href="#" class="text-2xl hover:text-gold-300">📱</a>
+              <a href="#" class="text-2xl hover:text-gold-300">📘</a>
+              <a href="#" class="text-2xl hover:text-gold-300">📸</a>
+              <a href="#" class="text-2xl hover:text-gold-300">🐦</a>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-gray-800 pt-6 text-center text-gray-500 text-sm">&copy; 2023 塔羅智慧 All Rights Reserved. | 隱私政策 | 使用條款</div>
+      </div>
+    </footer>
+
+    <!-- 移動端選單 -->
+    <div class="fixed inset-0 bg-midnight-950/95 z-50 hidden">
+      <div class="flex justify-end p-4">
+        <button class="text-2xl">✕</button>
+      </div>
+      <div class="flex flex-col items-center space-y-6 text-xl pt-12">
+        <a href="#" class="hover:text-gold-300 transition-colors">首頁</a>
+        <a href="#" class="hover:text-gold-300 transition-colors">占卜服務</a>
+        <a href="#" class="hover:text-gold-300 transition-colors">塔羅牌庫</a>
+        <a href="#" class="hover:text-gold-300 transition-colors">會員方案</a>
+        <a href="#" class="hover:text-gold-300 transition-colors">關於我們</a>
+        <div class="pt-6 flex flex-col space-y-4 w-64">
+          <a href="#" class="px-4 py-2 rounded-md border border-gold-400 text-gold-300 hover:bg-gold-400 hover:text-midnight-900 transition-colors text-center"
+            >登入</a
+          >Ｐ00 hover:bg-gold-500 transition-colors text-center">註冊</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

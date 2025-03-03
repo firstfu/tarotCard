@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>登入/註冊 - 塔羅智慧 AI 塔羅牌占卜平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              mystic: {
+                50: "#f5f3ff",
+                100: "#ede9fe",
+                200: "#ddd6fe",
+                300: "#c4b5fd",
+                400: "#a78bfa",
+                500: "#8b5cf6",
+                600: "#7c3aed",
+                700: "#6d28d9",
+                800: "#5b21b6",
+                900: "#4c1d95",
+                950: "#2e1065",
+              },
+              midnight: {
+                50: "#edf2fc",
+                100: "#dde6f3",
+                200: "#c0d1e8",
+                300: "#9ab3d8",
+                400: "#718dc3",
+                500: "#5a74af",
+                600: "#465c94",
+                700: "#384878",
+                800: "#2f3d64",
+                900: "#1a2035",
+                950: "#0d101c",
+              },
+              gold: {
+                100: "#fff7cc",
+                200: "#ffeaa3",
+                300: "#ffdc7a",
+                400: "#ffd152",
+                500: "#ffc229",
+                600: "#e6ad1f",
+                700: "#cc9919",
+                800: "#b38414",
+                900: "#99700f",
+              },
+            },
+            fontFamily: {
+              serif: ['"Noto Serif TC"', "serif"],
+              sans: ['"Noto Sans TC"', "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background: linear-gradient(to bottom, #0d101c, #2e1065);
+        min-height: 100vh;
+        font-family: "Noto Sans TC", sans-serif;
+      }
+      .tarot-title {
+        font-family: "Noto Serif TC", serif;
+      }
+      .stars {
+        background-image: radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0, 0, 0, 0)), radial-gradient(2px 2px at 40px 70px, #ffffff, rgba(0, 0, 0, 0)),
+          radial-gradient(2px 2px at 60px 110px, #ffffff, rgba(0, 0, 0, 0)), radial-gradient(2px 2px at 80px 150px, #ffffff, rgba(0, 0, 0, 0));
+        background-size: 200px 200px;
+      }
+      .auth-card {
+        background: rgba(47, 61, 100, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .input-field {
+        background: rgba(26, 32, 53, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .input-field:focus {
+        border-color: rgba(255, 209, 82, 0.7);
+        box-shadow: 0 0 0 2px rgba(255, 209, 82, 0.2);
+      }
+    </style>
+  </head>
+  <body class="text-white relative overflow-x-hidden">
+    <!-- 星空背景 -->
+    <div class="stars absolute inset-0 opacity-50"></div>
+
+    <!-- 導航欄 -->
+    <nav class="relative z-10 bg-midnight-900/80 backdrop-blur-md">
+      <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center">
+          <a href="index.html" class="tarot-title text-2xl font-bold text-gold-300">塔羅智慧</a>
+        </div>
+        <div class="hidden md:flex space-x-6">
+          <a href="index.html" class="hover:text-gold-300 transition-colors">首頁</a>
+          <a href="#" class="hover:text-gold-300 transition-colors">占卜服務</a>
+          <a href="#" class="hover:text-gold-300 transition-colors">塔羅牌庫</a>
+          <a href="#" class="hover:text-gold-300 transition-colors">會員方案</a>
+          <a href="#" class="hover:text-gold-300 transition-colors">關於我們</a>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button class="md:hidden text-2xl">☰</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 主要內容區 -->
+    <main class="relative z-10 container mx-auto px-4 py-12 flex justify-center items-center min-h-[80vh]">
+      <div class="w-full max-w-md">
+        <!-- 標籤切換 -->
+        <div class="flex justify-center mb-8">
+          <div class="flex p-1 bg-midnight-800/70 backdrop-blur-md rounded-lg">
+            <button id="login-tab" class="px-6 py-3 rounded-md bg-gold-400 text-midnight-900 font-bold">登入</button>
+            <button id="register-tab" class="px-6 py-3 rounded-md text-white">註冊</button>
+          </div>
+        </div>
+
+        <!-- 登入表單 -->
+        <div id="login-form" class="auth-card rounded-xl p-8 shadow-xl">
+          <h2 class="tarot-title text-2xl font-bold mb-8 text-center text-gold-300">登入您的帳戶</h2>
+
+          <form>
+            <div class="mb-6">
+              <label for="login-email" class="block mb-2 text-sm font-medium">電子郵件</label>
+              <input
+                type="email"
+                id="login-email"
+                class="input-field w-full px-4 py-3 rounded-md focus:outline-none"
+                placeholder="請輸入您的電子郵件"
+                required
+              />
+            </div>
+
+            <div class="mb-6">
+              <label for="login-password" class="block mb-2 text-sm font-medium">密碼</label>
+              <input
+                type="password"
+                id="login-password"
+                class="input-field w-full px-4 py-3 rounded-md focus:outline-none"
+                placeholder="請輸入您的密碼"
+                required
+              />
+            </div>
+
+            <div class="flex justify-between mb-6 text-sm">
+              <div class="flex items-center">
+                <input type="checkbox" id="remember-me" class="mr-2" />
+                <label for="remember-me">記住我</label>
+              </div>
+              <a href="#" class="text-gold-300 hover:text-gold-400 transition-colors">忘記密碼？</a>
+            </div>
+
+            <button type="submit" class="w-full py-3 rounded-md bg-gold-400 text-midnight-900 font-bold hover:bg-gold-500 transition-colors">登入</button>
+          </form>
+
+          <div class="mt-8">
+            <div class="flex items-center my-4">
+              <div class="flex-grow h-px bg-gray-600"></div>
+              <span class="px-4 text-sm text-gray-400">或使用以下方式登入</span>
+              <div class="flex-grow h-px bg-gray-600"></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <button class="flex justify-center items-center py-3 rounded-md border border-gray-500 hover:bg-midnight-800 transition-colors">
+                <span class="mr-2">🔍</span> Google
+              </button>
+              <button class="flex justify-center items-center py-3 rounded-md border border-gray-500 hover:bg-midnight-800 transition-colors">
+                <span class="mr-2">📘</span> Facebook
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 註冊表單 (初始隱藏) -->
+        <div id="register-form" class="auth-card rounded-xl p-8 shadow-xl hidden">
+          <h2 class="tarot-title text-2xl font-bold mb-8 text-center text-gold-300">創建新帳戶</h2>
+
+          <form>
+            <div class="mb-6">
+              <label for="register-name" class="block mb-2 text-sm font-medium">用戶名稱</label>
+              <input
+                type="text"
+                id="register-name"
+                class="input-field w-full px-4 py-3 rounded-md focus:outline-none"
+                placeholder="請輸入您的用戶名稱"
+                required
+              />
+            </div>
+
+            <div class="mb-6">
+              <label for="register-email" class="block mb-2 text-sm font-medium">電子郵件</label>
+              <input
+                type="email"
+                id="register-email"
+                class="input-field w-full px-4 py-3 rounded-md focus:outline-none"
+                placeholder="請輸入您的電子郵件"
+                required
+              />
+            </div>
+
+            <div class="mb-6">
+              <label for="register-password" class="block mb-2 text-sm font-medium">密碼</label>
+              <input
+                type="password"
+                id="register-password"
+                class="input-field w-full px-4 py-3 rounded-md focus:outline-none"
+                placeholder="請設定您的密碼"
+                required
+              />
+              <p class="text-xs text-gray-400 mt-1">密碼須包含至少8個字符，包括英文大小寫、數字和特殊符號</p>
+            </div>
+
+            <div class="mb-6">
+              <label for="register-confirm-password" class="block mb-2 text-sm font-medium">確認密碼</label>
+              <input
+                type="password"
+                id="register-confirm-password"
+                class="input-field w-full px-4 py-3 rounded-md focus:outline-none"
+                placeholder="請再次輸入密碼"
+                required
+              />
+            </div>
+
+            <div class="flex items-center mb-6 text-sm">
+              <input type="checkbox" id="terms" class="mr-2" required />
+              <label for="terms"
+                >我同意<a href="#" class="text-gold-300 hover:text-gold-400 transition-colors">服務條款</a>和<a
+                  href="#"
+                  class="text-gold-300 hover:text-gold-400 transition-colors"
+                  >隱私政策</a
+                ></label
+              >
+            </div>
+
+            <button type="submit" class="w-full py-3 rounded-md bg-gold-400 text-midnight-900 font-bold hover:bg-gold-500 transition-colors">註冊</button>
+          </form>
+
+          <div class="mt-8">
+            <div class="flex items-center my-4">
+              <div class="flex-grow h-px bg-gray-600"></div>
+              <span class="px-4 text-sm text-gray-400">或使用以下方式註冊</span>
+              <div class="flex-grow h-px bg-gray-600"></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <button class="flex justify-center items-center py-3 rounded-md border border-gray-500 hover:bg-midnight-800 transition-colors">
+                <span class="mr-2">🔍</span> Google
+              </button>
+              <button class="flex justify-center items-center py-3 rounded-md border border-gray-500 hover:bg-midnight-800 transition-colors">
+                <span class="mr-2">📘</span> Facebook
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 頁腳 -->
+    <footer class="relative z-10 bg-midnight-950 py-8 mt-auto">
+      <div class="container mx-auto px-4">
+        <div class="border-t border-gray-800 pt-6 text-center text-gray-500 text-sm">
+          &copy; 2023 塔羅智慧 All Rights Reserved. | <a href="#" class="hover:text-gold-300">隱私政策</a> |
+          <a href="#" class="hover:text-gold-300">使用條款</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- 移動端選單 -->
+    <div class="fixed inset-0 bg-midnight-950/95 z-50 hidden">
+      <div class="flex justify-end p-4">
+        <button class="text-2xl">✕</button>
+      </div>
+      <div class="flex flex-col items-center space-y-6 text-xl pt-12">
+        <a href="index.html" class="hover:text-gold-300 transition-colors">首頁</a>
+        <a href="#" class="hover:text-gold-300 transition-colors">占卜服務</a>
+        <a href="#" class="hover:text-gold-300 transition-colors">塔羅牌庫</a>
+        <a href="#" class="hover:text-gold-300 transition-colors">會員方案</a>
+        <a href="#" class="hover:text-gold-300 transition-colors">關於我們</a>
+      </div>
+    </div>
+
+    <!-- JavaScript 切換表單 -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const loginTab = document.getElementById("login-tab");
+        const registerTab = document.getElementById("register-tab");
+        const loginForm = document.getElementById("login-form");
+        const registerForm = document.getElementById("register-form");
+
+        loginTab.addEventListener("click", function () {
+          loginTab.classList.add("bg-gold-400", "text-midnight-900");
+          loginTab.classList.remove("text-white");
+          registerTab.classList.remove("bg-gold-400", "text-midnight-900");
+          registerTab.classList.add("text-white");
+
+          loginForm.classList.remove("hidden");
+          registerForm.classList.add("hidden");
+        });
+
+        registerTab.addEventListener("click", function () {
+          registerTab.classList.add("bg-gold-400", "text-midnight-900");
+          registerTab.classList.remove("text-white");
+          loginTab.classList.remove("bg-gold-400", "text-midnight-900");
+          loginTab.classList.add("text-white");
+
+          registerForm.classList.remove("hidden");
+          loginForm.classList.add("hidden");
+        });
+      });
+    </script>
+  </body>
+</html>

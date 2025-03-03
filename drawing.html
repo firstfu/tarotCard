@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>塔羅牌占卜 - 塔羅智慧 AI 塔羅牌占卜平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              mystic: {
+                50: "#f5f3ff",
+                100: "#ede9fe",
+                200: "#ddd6fe",
+                300: "#c4b5fd",
+                400: "#a78bfa",
+                500: "#8b5cf6",
+                600: "#7c3aed",
+                700: "#6d28d9",
+                800: "#5b21b6",
+                900: "#4c1d95",
+                950: "#2e1065",
+              },
+              midnight: {
+                50: "#edf2fc",
+                100: "#dde6f3",
+                200: "#c0d1e8",
+                300: "#9ab3d8",
+                400: "#718dc3",
+                500: "#5a74af",
+                600: "#465c94",
+                700: "#384878",
+                800: "#2f3d64",
+                900: "#1a2035",
+                950: "#0d101c",
+              },
+              gold: {
+                100: "#fff7cc",
+                200: "#ffeaa3",
+                300: "#ffdc7a",
+                400: "#ffd152",
+                500: "#ffc229",
+                600: "#e6ad1f",
+                700: "#cc9919",
+                800: "#b38414",
+                900: "#99700f",
+              },
+            },
+            fontFamily: {
+              serif: ['"Noto Serif TC"', "serif"],
+              sans: ['"Noto Sans TC"', "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background: linear-gradient(to bottom, #0d101c, #2e1065);
+        min-height: 100vh;
+        font-family: "Noto Sans TC", sans-serif;
+      }
+      .tarot-title {
+        font-family: "Noto Serif TC", serif;
+      }
+      .stars {
+        background-image: radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0, 0, 0, 0)), radial-gradient(2px 2px at 40px 70px, #ffffff, rgba(0, 0, 0, 0)),
+          radial-gradient(2px 2px at 60px 110px, #ffffff, rgba(0, 0, 0, 0)), radial-gradient(2px 2px at 80px 150px, #ffffff, rgba(0, 0, 0, 0));
+        background-size: 200px 200px;
+      }
+      .tarot-deck {
+        width: 120px;
+        height: 200px;
+        perspective: 1000px;
+      }
+      .tarot-card {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        transform-style: preserve-3d;
+        transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      }
+      .tarot-card-front,
+      .tarot-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .tarot-card-front {
+        background: linear-gradient(45deg, #384878, #2f3d64);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: rotateY(180deg);
+        border: 1px solid rgba(255, 209, 82, 0.3);
+      }
+      .tarot-card-back {
+        background: linear-gradient(45deg, #372874, #5b21b6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 209, 82, 0.3);
+      }
+      .tarot-card-pattern {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.1;
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNDB2NDBoLTQweiIvPjxwYXRoIGQ9Ik0yMCAyMGMyLjc2MSAwIDUgMi4yMzkgNSA1cy0yLjIzOSA1LTUgNS01LTIuMjM5LTUtNSAyLjIzOS01IDUtNXptMC0yYy0zLjg2NiAwLTcgMy4xMzQtNyA3czMuMTM0IDcgNyA3IDctMy4xMzQgNy03LTMuMTM0LTctNy03em0wLTE4YzIuNzYxIDAgNSAyLjIzOSA1IDVzLTIuMjM5IDUtNSA1LTUtMi4yMzktNS01IDIuMjM5LTUgNS01em0wLTJjLTMuODY2IDAtNyAzLjEzNC03IDdzMy4xMzQgNyA3IDcgNy0zLjEzNCA3LTctMy4xMzQtNy03LTd6IiBmaWxsPSIjZmZkYzdhIiBmaWxsLXJ1bGU9Im5vbnplcm8iIG9wYWNpdHk9Ii4xIi8+PC9nPjwvc3ZnPg==");
+      }
+      .tarot-card-back-logo {
+        font-size: 24px;
+        color: rgba(255, 209, 82, 0.7);
+        z-index: 2;
+      }
+      .card-flipped {
+        transform: rotateY(180deg);
+      }
+      .card-placeholder {
+        border: 2px dashed rgba(255, 209, 82, 0.3);
+        border-radius: 10px;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 209, 82, 0.5);
+      }
+      .reading-card {
+        background: rgba(47, 61, 100, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .separator {
+        height: 1px;
+        background: linear-gradient(to right, transparent, rgba(255, 209, 82, 0.5), transparent);
+        margin: 2rem 0;
+      }
+      .interpretation {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+      }
+      .interpretation.active {
+        max-height: 1000px;
+      }
+      .btn-circle {
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+      .btn-circle:hover {
+        transform: scale(1.1);
+      }
+      .spread-area {
+        min-height: 400px;
+      }
+      .ai-thinking {
+        position: relative;
+        padding-left: 20px;
+      }
+      .ai-thinking:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 10px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #ffd152;
+        animation: pulse 1.5s infinite;
+      }
+      @keyframes pulse {
+        0% {
+          transform: scale(0.8);
+          opacity: 0.5;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(0.8);
+          opacity: 0.5;
+        }
+      }
+      .card-position-label {
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(255, 209, 82, 0.8);
+        color: #0d101c;
+        padding: 3px 8px;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        white-space: nowrap;
+      }
+      /* 塔羅牌翻轉動畫 */
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+      .float-animation {
+        animation: float 3s ease-in-out infinite;
+      }
+    </style>
+  </head>
+  <body class="text-white relative overflow-x-hidden">
+    <!-- 星空背景 -->
+    <div class="stars absolute inset-0 opacity-50"></div>
+
+    <!-- 導航欄 -->
+    <nav class="relative z-10 bg-midnight-900/80 backdrop-blur-md">
+      <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center">
+          <a href="index.html" class="tarot-title text-2xl font-bold text-gold-300">塔羅智慧</a>
+        </div>
+        <div class="hidden md:flex space-x-6">
+          <a href="index.html" class="hover:text-gold-300 transition-colors">首頁</a>
+          <a href="divination.html" class="text-gold-300 transition-colors">占卜服務</a>
+          <a href="#" class="hover:text-gold-300 transition-colors">塔羅牌庫</a>
+          <a href="#" class="hover:text-gold-300 transition-colors">會員方案</a>
+          <a href="#" class="hover:text-gold-300 transition-colors">關於我們</a>
+        </div>
+        <div class="flex items-center space-x-4">
+          <a href="login.html" class="px-4 py-2 rounded-md border border-gold-400 text-gold-300 hover:bg-gold-400 hover:text-midnight-900 transition-colors"
+            >登入</a
+          >
+          <a href="login.html" class="px-4 py-2 rounded-md bg-gold-400 text-midnight-900 hover:bg-gold-500 transition-colors">註冊</a>
+          <button class="md:hidden text-2xl">☰</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 主要內容區 -->
+    <main class="relative z-10 container mx-auto px-4 py-12">
+      <!-- 步驟指示器 -->
+      <div class="mb-12">
+        <div class="max-w-4xl mx-auto flex justify-between">
+          <div class="flex flex-col items-center">
+            <div class="w-10 h-10 rounded-full bg-gold-400/50 flex items-center justify-center font-bold text-white">1</div>
+            <div class="text-center mt-2 text-gold-300/50">選擇占卜類型</div>
+          </div>
+          <div class="flex-1 pt-5 mx-4">
+            <div class="h-px bg-gradient-to-r from-transparent via-gold-300/50 to-transparent"></div>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="w-10 h-10 rounded-full bg-gold-400/50 flex items-center justify-center font-bold text-white">2</div>
+            <div class="text-center mt-2 text-gold-300/50">選擇牌陣</div>
+          </div>
+          <div class="flex-1 pt-5 mx-4">
+            <div class="h-px bg-gradient-to-r from-transparent via-gold-300/50 to-transparent"></div>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="w-10 h-10 rounded-full bg-gold-400/50 flex items-center justify-center font-bold text-white">3</div>
+            <div class="text-center mt-2 text-gold-300/50">輸入問題</div>
+          </div>
+          <div class="flex-1 pt-5 mx-4">
+            <div class="h-px bg-gradient-to-r from-transparent via-gold-300/50 to-transparent"></div>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="w-10 h-10 rounded-full bg-gold-400 flex items-center justify-center font-bold text-midnight-900">4</div>
+            <div class="text-center mt-2 text-gold-300 font-medium">抽牌解讀</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 占卜信息顯示 -->
+      <div class="mb-12 text-center">
+        <div id="divination-type" class="text-2xl tarot-title font-bold text-gold-300">愛情塔羅</div>
+        <div id="spread-type" class="text-lg text-gray-300 mt-1">單張牌陣</div>
+        <div id="user-question" class="max-w-2xl mx-auto mt-4 italic text-gray-400">"我與現在的伴侶關係未來會如何發展？"</div>
+      </div>
+
+      <!-- 抽牌階段 -->
+      <div id="drawing-phase" class="mb-12">
+        <h2 class="tarot-title text-3xl font-bold text-center mb-8 text-gold-300">請從牌庫中抽取塔羅牌</h2>
+
+        <div class="flex flex-col items-center justify-center">
+          <!-- 洗牌動畫指示 -->
+          <div id="shuffle-indicator" class="mb-6 text-center">
+            <p class="text-gray-300 mb-2">塔羅牌正在洗牌中...</p>
+            <div class="flex justify-center space-x-1">
+              <div class="w-3 h-3 bg-gold-300 rounded-full animate-bounce" style="animation-delay: 0s"></div>
+              <div class="w-3 h-3 bg-gold-300 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+              <div class="w-3 h-3 bg-gold-300 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+            </div>
+          </div>
+
+          <!-- 塔羅牌庫 -->
+          <div id="tarot-deck-container" class="tarot-deck float-animation mt-6 hidden">
+            <div class="tarot-card">
+              <div class="tarot-card-front">
+                <!-- 牌面會在翻牌後顯示 -->
+                <img src="https://via.placeholder.com/120x200/5b21b6/ffffff?text=塔羅牌" alt="塔羅牌" />
+              </div>
+              <div class="tarot-card-back">
+                <div class="tarot-card-pattern"></div>
+                <div class="tarot-card-back-logo">✨</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 抽牌引導 -->
+          <p id="draw-instruction" class="text-gold-300 mt-6 font-medium hidden">請點擊牌庫抽取一張牌</p>
+
+          <!-- 剩餘抽牌計數 (單張牌陣隱藏) -->
+          <p id="cards-remaining" class="text-gray-400 mt-4 hidden">剩餘需要抽 <span class="text-gold-300 font-bold">3</span> 張牌</p>
+        </div>
+      </div>
+
+      <!-- 牌陣顯示區域 -->
+      <div id="spread-display" class="mb-12 hidden">
+        <h2 class="tarot-title text-3xl font-bold text-center mb-12 text-gold-300">你的塔羅占卜結果</h2>
+
+        <!-- 單張牌陣 -->
+        <div id="single-spread" class="flex justify-center items-center spread-area">
+          <div class="relative tarot-deck">
+            <!-- 這裡將顯示抽到的牌 -->
+            <div class="card-placeholder">
+              <span>?</span>
+            </div>
+            <div class="card-position-label">核心訊息</div>
+          </div>
+        </div>
+
+        <!-- 三張牌陣 (初始隱藏) -->
+        <div id="three-spread" class="flex justify-center items-center space-x-12 spread-area hidden">
+          <div class="relative tarot-deck">
+            <div class="card-placeholder">
+              <span>?</span>
+            </div>
+            <div class="card-position-label">過去</div>
+          </div>
+          <div class="relative tarot-deck">
+            <div class="card-placeholder">
+              <span>?</span>
+            </div>
+            <div class="card-position-label">現在</div>
+          </div>
+          <div class="relative tarot-deck">
+            <div class="card-placeholder">
+              <span>?</span>
+            </div>
+            <div class="card-position-label">未來</div>
+          </div>
+        </div>
+
+        <!-- 凱爾特十字牌陣 (初始隱藏) -->
+        <div id="celtic-spread" class="grid grid-cols-3 gap-4 max-w-3xl mx-auto spread-area hidden">
+          <div class="col-span-3 flex justify-center">
+            <div class="relative tarot-deck transform scale-75">
+              <div class="card-placeholder">
+                <span>?</span>
+              </div>
+              <div class="card-position-label">現狀</div>
+            </div>
+          </div>
+          <div class="col-span-1"></div>
+          <div class="col-span-1 flex justify-center">
+            <div class="relative tarot-deck transform scale-75">
+              <div class="card-placeholder">
+                <span>?</span>
+              </div>
+              <div class="card-position-label">挑戰</div>
+            </div>
+          </div>
+          <div class="col-span-1"></div>
+          <div class="col-span-1 flex justify-end">
+            <div class="relative tarot-deck transform scale-75">
+              <div class="card-placeholder">
+                <span>?</span>
+              </div>
+              <div class="card-position-label">過去</div>
+            </div>
+          </div>
+          <div class="col-span-1 flex justify-center">
+            <div class="relative tarot-deck transform scale-75">
+              <div class="card-placeholder">
+                <span>?</span>
+              </div>
+              <div class="card-position-label">基礎</div>
+            </div>
+          </div>
+          <div class="col-span-1 flex justify-start">
+            <div class="relative tarot-deck transform scale-75">
+              <div class="card-placeholder">
+                <span>?</span>
+              </div>
+              <div class="card-position-label">未來</div>
+            </div>
+          </div>
+          <div class="col-span-3 flex justify-center">
+            <div class="relative tarot-deck transform scale-75">
+              <div class="card-placeholder">
+                <span>?</span>
+              </div>
+              <div class="card-position-label">自我</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI 解讀區域 -->
+      <div id="interpretation-area" class="mb-12 hidden">
+        <div class="separator"></div>
+
+        <div class="reading-card rounded-xl p-8 shadow-xl max-w-4xl mx-auto">
+          <h2 class="tarot-title text-2xl font-bold mb-6 text-gold-300">AI 塔羅解讀</h2>
+
+          <!-- AI 思考中提示 -->
+          <div id="ai-thinking" class="text-gray-300 ai-thinking mb-6">AI 正在解讀您的塔羅牌...</div>
+
+          <!-- AI 解讀結果 -->
+          <div id="ai-interpretation" class="hidden">
+            <!-- 單張牌解讀 -->
+            <div id="single-card-reading">
+              <div class="mb-6">
+                <h3 class="font-bold text-xl mb-2">愚者正位</h3>
+                <div class="flex flex-col md:flex-row gap-4">
+                  <img src="https://via.placeholder.com/150x250/465c94/ffffff?text=愚者" alt="愚者塔羅牌" class="rounded-lg" />
+                  <div>
+                    <p class="text-gray-300 mb-4">
+                      愚者代表新的開始、冒險和未知的可能性。在感情方面，這張牌暗示著您和伴侶的關係可能正處於一個需要勇氣和信任的新階段。
+                    </p>
+                    <p class="text-gray-300">
+                      當愚者出現在愛情占卜中，它通常表示關係中需要一些冒險精神和開放態度。這是一個鼓勵您和伴侶一起探索新可能性的信號，不要過於拘泥於既定的模式或期望。
+                    </p>
+                  </div>
+                </div>
+
+                <div class="mt-6">
+                  <button class="flex items-center text-gold-300 hover:text-gold-400 transition-colors" onclick="toggleSection('detailed-interpretation')">
+                    <span class="mr-2">詳細解讀</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path
+                        fill-rule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                  <div id="detailed-interpretation" class="interpretation mt-4 text-gray-300">
+                    <p class="mb-4">愚者作為塔羅牌中的零號牌，代表著無限的可能性和潛力。在您的關係中，這張牌顯示了以下幾個方面：</p>
+                    <ul class="list-disc pl-5 space-y-2">
+                      <li>您們的關係可能正要進入一個全新的階段，這需要雙方都保持開放的心態。</li>
+                      <li>不要害怕犯錯或面對未知，因為這是成長和深化關係的必經之路。</li>
+                      <li>信任直覺，但也要保持一定的謹慎，避免過於天真。</li>
+                      <li>您可能需要放下過去的包袱，以更輕鬆的態度面對當前的關係。</li>
+                    </ul>
+                    <p class="mt-4">
+                      愚者提醒我們，有時候最有價值的經歷來自於踏出舒適區，嘗試新的事物。在您的感情關係中，這可能意味著需要打破常規，嘗試新的溝通方式或共同體驗新的活動。
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8">
+              <h3 class="font-bold text-xl mb-4">總體解讀</h3>
+              <p class="text-gray-300">
+                根據您抽到的塔羅牌，您和伴侶的關係具有很大的發展潛力，但需要雙方保持開放的心態和積極的溝通。愚者的出現建議您們不要害怕嘗試新事物，一起成長和探索。這段關係可能會經歷一些未知的變化，但只要保持信任和勇氣，這些變化很可能會帶來積極的結果。
+              </p>
+              <p class="text-gray-300 mt-4">記住，塔羅牌展示的是可能性而非確定的未來。您和伴侶擁有塑造自己關係的能力和自由。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 行動按鈕 -->
+      <div class="flex justify-center space-x-4 mt-12">
+        <a href="divination.html" class="px-6 py-3 rounded-md border border-gray-500 text-white hover:bg-midnight-800 transition-colors"> 重新選擇占卜 </a>
+        <button id="save-btn" class="px-6 py-3 rounded-md bg-gold-400 text-midnight-900 font-bold hover:bg-gold-500 transition-colors hidden">儲存結果</button>
+        <button id="share-btn" class="px-6 py-3 rounded-md bg-midnight-700 border border-gold-400 text-gold-300 hover:bg-midnight-600 transition-colors hidden">
+          分享結果
+        </button>
+      </div>
+    </main>
+
+    <!-- 頁腳 -->
+    <footer class="relative z-10 bg-midnight-950 py-8 mt-12">
+      <div class="container mx-auto px-4">
+        <div class="border-t border-gray-800 pt-6 text-center text-gray-500 text-sm">
+          &copy; 2023 塔羅智慧 All Rights Reserved. | <a href="#" class="hover:text-gold-300">隱私政策</a> |
+          <a href="#" class="hover:text-gold-300">使用條款</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // 解析 URL 參數
+        const urlParams = new URLSearchParams(window.location.search);
+        const divinationType = urlParams.get("type");
+        const spreadType = urlParams.get("spread");
+
+        // 設置占卜類型和牌陣類型
+        updateDivinationInfo(divinationType, spreadType);
+
+        // 模擬洗牌過程
+        setTimeout(() => {
+          document.getElementById("shuffle-indicator").classList.add("hidden");
+          document.getElementById("tarot-deck-container").classList.remove("hidden");
+          document.getElementById("draw-instruction").classList.remove("hidden");
+
+          if (spreadType !== "single") {
+            document.getElementById("cards-remaining").classList.remove("hidden");
+          }
+        }, 3000);
+
+        // 設置抽牌事件
+        setupDrawingEvents(spreadType);
+      });
+
+      // 更新占卜信息顯示
+      function updateDivinationInfo(type, spread) {
+        const divinationTypeEl = document.getElementById("divination-type");
+        const spreadTypeEl = document.getElementById("spread-type");
+
+        if (type === "love") {
+          divinationTypeEl.textContent = "愛情塔羅";
+        } else if (type === "career") {
+          divinationTypeEl.textContent = "事業塔羅";
+        } else if (type === "wealth") {
+          divinationTypeEl.textContent = "財運塔羅";
+        }
+
+        if (spread === "single") {
+          spreadTypeEl.textContent = "單張牌陣";
+          document.getElementById("single-spread").classList.remove("hidden");
+        } else if (spread === "three") {
+          spreadTypeEl.textContent = "三張牌陣";
+          document.getElementById("three-spread").classList.remove("hidden");
+        } else if (spread === "celtic") {
+          spreadTypeEl.textContent = "凱爾特十字牌陣";
+          document.getElementById("celtic-spread").classList.remove("hidden");
+        }
+      }
+
+      // 設置抽牌事件
+      function setupDrawingEvents(spreadType) {
+        const tarotDeck = document.querySelector(".tarot-card");
+        let cardsDrawn = 0;
+
+        // 計算需要抽取的牌數
+        let totalCards = 1;
+        if (spreadType === "three") {
+          totalCards = 3;
+        } else if (spreadType === "celtic") {
+          totalCards = 6;
+        }
+
+        tarotDeck.addEventListener("click", function () {
+          // 翻轉牌
+          this.classList.add("card-flipped");
+
+          cardsDrawn++;
+
+          // 更新剩餘牌數
+          if (spreadType !== "single") {
+            const remaining = totalCards - cardsDrawn;
+            document.getElementById("cards-remaining").innerHTML = `剩餘需要抽 <span class="text-gold-300 font-bold">${remaining}</span> 張牌`;
+
+            // 如果還有牌需要抽，重置牌庫
+            if (remaining > 0) {
+              setTimeout(() => {
+                tarotDeck.classList.remove("card-flipped");
+              }, 1000);
+            }
+          }
+
+          // 當抽完所有牌后
+          if (cardsDrawn >= totalCards) {
+            // 隱藏抽牌區域，顯示牌陣和解讀區域
+            setTimeout(() => {
+              document.getElementById("drawing-phase").classList.add("hidden");
+              document.getElementById("spread-display").classList.remove("hidden");
+              document.getElementById("interpretation-area").classList.remove("hidden");
+
+              // 模擬牌陣中的牌
+              populateSpread(spreadType);
+
+              // 模擬 AI 解讀
+              setTimeout(() => {
+                document.getElementById("ai-thinking").classList.add("hidden");
+                document.getElementById("ai-interpretation").classList.remove("hidden");
+                document.getElementById("save-btn").classList.remove("hidden");
+                document.getElementById("share-btn").classList.remove("hidden");
+              }, 3000);
+            }, 1500);
+          }
+        });
+      }
+
+      // 填充牌陣
+      function populateSpread(spreadType) {
+        // 這裡模擬填充牌陣的過程
+        // 實際應用中應該根據抽到的牌來填充
+
+        if (spreadType === "single") {
+          const cardPlaceholder = document.querySelector("#single-spread .card-placeholder");
+          cardPlaceholder.innerHTML = '<img src="https://via.placeholder.com/120x200/465c94/ffffff?text=愚者" alt="愚者" />';
+        } else if (spreadType === "three") {
+          const cardPlaceholders = document.querySelectorAll("#three-spread .card-placeholder");
+          cardPlaceholders.forEach((placeholder, index) => {
+            const cardNames = ["女祭司", "太陽", "節制"];
+            placeholder.innerHTML = `<img src="https://via.placeholder.com/120x200/465c94/ffffff?text=${cardNames[index]}" alt="${cardNames[index]}" />`;
+          });
+        } else if (spreadType === "celtic") {
+          const cardPlaceholders = document.querySelectorAll("#celtic-spread .card-placeholder");
+          cardPlaceholders.forEach((placeholder, index) => {
+            const cardNames = ["命運之輪", "正義", "戀人", "皇帝", "力量", "審判"];
+            placeholder.innerHTML = `<img src="https://via.placeholder.com/120x200/465c94/ffffff?text=${cardNames[index]}" alt="${cardNames[index]}" />`;
+          });
+        }
+      }
+
+      // 切換詳細解讀區塊的顯示
+      function toggleSection(id) {
+        const section = document.getElementById(id);
+        section.classList.toggle("active");
+      }
+    </script>
+  </body>
+</html>
