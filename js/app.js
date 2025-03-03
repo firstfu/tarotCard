@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 初始化全局變量
     var cardsRequired = 0; // 需要抽取的卡牌數量
-    let cardsDrawn = 0; // 已抽取的卡牌數量
+    var cardsDrawn = 0; // 已抽取的卡牌數量
 
     // 解析URL參數，獲取占卜類型和牌陣類型
     const urlParams = new URLSearchParams(window.location.search);
