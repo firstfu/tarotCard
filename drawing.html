@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>塔羅牌占卜 - 塔羅智慧 AI 塔羅牌占卜平台</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet" />
     <script>
       tailwind.config = {
         theme: {
@@ -245,14 +242,12 @@
         <div class="hidden md:flex space-x-6">
           <a href="index.html" class="hover:text-gold-300 transition-colors">首頁</a>
           <a href="divination.html" class="text-gold-300 transition-colors">占卜服務</a>
-          <a href="#" class="hover:text-gold-300 transition-colors">塔羅牌庫</a>
+          <a href="tarot-database.html" class="hover:text-gold-300 transition-colors">塔羅牌庫</a>
           <a href="#" class="hover:text-gold-300 transition-colors">會員方案</a>
           <a href="#" class="hover:text-gold-300 transition-colors">關於我們</a>
         </div>
         <div class="flex items-center space-x-4">
-          <a href="login.html" class="px-4 py-2 rounded-md border border-gold-400 text-gold-300 hover:bg-gold-400 hover:text-midnight-900 transition-colors"
-            >登入</a
-          >
+          <a href="login.html" class="px-4 py-2 rounded-md border border-gold-400 text-gold-300 hover:bg-gold-400 hover:text-midnight-900 transition-colors">登入</a>
           <a href="login.html" class="px-4 py-2 rounded-md bg-gold-400 text-midnight-900 hover:bg-gold-500 transition-colors">註冊</a>
           <button class="md:hidden text-2xl">☰</button>
         </div>
@@ -440,56 +435,7 @@
 
           <!-- AI 解讀結果 -->
           <div id="ai-interpretation" class="hidden">
-            <!-- 單張牌解讀 -->
-            <div id="single-card-reading">
-              <div class="mb-6">
-                <h3 class="font-bold text-xl mb-2">愚者正位</h3>
-                <div class="flex flex-col md:flex-row gap-4">
-                  <img src="https://via.placeholder.com/150x250/465c94/ffffff?text=愚者" alt="愚者塔羅牌" class="rounded-lg" />
-                  <div>
-                    <p class="text-gray-300 mb-4">
-                      愚者代表新的開始、冒險和未知的可能性。在感情方面，這張牌暗示著您和伴侶的關係可能正處於一個需要勇氣和信任的新階段。
-                    </p>
-                    <p class="text-gray-300">
-                      當愚者出現在愛情占卜中，它通常表示關係中需要一些冒險精神和開放態度。這是一個鼓勵您和伴侶一起探索新可能性的信號，不要過於拘泥於既定的模式或期望。
-                    </p>
-                  </div>
-                </div>
-
-                <div class="mt-6">
-                  <button class="flex items-center text-gold-300 hover:text-gold-400 transition-colors" onclick="toggleSection('detailed-interpretation')">
-                    <span class="mr-2">詳細解讀</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path
-                        fill-rule="evenodd"
-                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </button>
-                  <div id="detailed-interpretation" class="interpretation mt-4 text-gray-300">
-                    <p class="mb-4">愚者作為塔羅牌中的零號牌，代表著無限的可能性和潛力。在您的關係中，這張牌顯示了以下幾個方面：</p>
-                    <ul class="list-disc pl-5 space-y-2">
-                      <li>您們的關係可能正要進入一個全新的階段，這需要雙方都保持開放的心態。</li>
-                      <li>不要害怕犯錯或面對未知，因為這是成長和深化關係的必經之路。</li>
-                      <li>信任直覺，但也要保持一定的謹慎，避免過於天真。</li>
-                      <li>您可能需要放下過去的包袱，以更輕鬆的態度面對當前的關係。</li>
-                    </ul>
-                    <p class="mt-4">
-                      愚者提醒我們，有時候最有價值的經歷來自於踏出舒適區，嘗試新的事物。在您的感情關係中，這可能意味著需要打破常規，嘗試新的溝通方式或共同體驗新的活動。
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-8">
-              <h3 class="font-bold text-xl mb-4">總體解讀</h3>
-              <p class="text-gray-300">
-                根據您抽到的塔羅牌，您和伴侶的關係具有很大的發展潛力，但需要雙方保持開放的心態和積極的溝通。愚者的出現建議您們不要害怕嘗試新事物，一起成長和探索。這段關係可能會經歷一些未知的變化，但只要保持信任和勇氣，這些變化很可能會帶來積極的結果。
-              </p>
-              <p class="text-gray-300 mt-4">記住，塔羅牌展示的是可能性而非確定的未來。您和伴侶擁有塑造自己關係的能力和自由。</p>
-            </div>
+            <!-- 解讀結果將由JavaScript動態生成 -->
           </div>
         </div>
       </div>
@@ -498,9 +444,7 @@
       <div class="flex justify-center space-x-4 mt-12">
         <a href="divination.html" class="px-6 py-3 rounded-md border border-gray-500 text-white hover:bg-midnight-800 transition-colors"> 重新選擇占卜 </a>
         <button id="save-btn" class="px-6 py-3 rounded-md bg-gold-400 text-midnight-900 font-bold hover:bg-gold-500 transition-colors hidden">儲存結果</button>
-        <button id="share-btn" class="px-6 py-3 rounded-md bg-midnight-700 border border-gold-400 text-gold-300 hover:bg-midnight-600 transition-colors hidden">
-          分享結果
-        </button>
+        <button id="share-btn" class="px-6 py-3 rounded-md bg-midnight-700 border border-gold-400 text-gold-300 hover:bg-midnight-600 transition-colors hidden">分享結果</button>
       </div>
     </main>
 
@@ -514,140 +458,7 @@
       </div>
     </footer>
 
-    <!-- JavaScript -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // 解析 URL 參數
-        const urlParams = new URLSearchParams(window.location.search);
-        const divinationType = urlParams.get("type");
-        const spreadType = urlParams.get("spread");
-
-        // 設置占卜類型和牌陣類型
-        updateDivinationInfo(divinationType, spreadType);
-
-        // 模擬洗牌過程
-        setTimeout(() => {
-          document.getElementById("shuffle-indicator").classList.add("hidden");
-          document.getElementById("tarot-deck-container").classList.remove("hidden");
-          document.getElementById("draw-instruction").classList.remove("hidden");
-
-          if (spreadType !== "single") {
-            document.getElementById("cards-remaining").classList.remove("hidden");
-          }
-        }, 3000);
-
-        // 設置抽牌事件
-        setupDrawingEvents(spreadType);
-      });
-
-      // 更新占卜信息顯示
-      function updateDivinationInfo(type, spread) {
-        const divinationTypeEl = document.getElementById("divination-type");
-        const spreadTypeEl = document.getElementById("spread-type");
-
-        if (type === "love") {
-          divinationTypeEl.textContent = "愛情塔羅";
-        } else if (type === "career") {
-          divinationTypeEl.textContent = "事業塔羅";
-        } else if (type === "wealth") {
-          divinationTypeEl.textContent = "財運塔羅";
-        }
-
-        if (spread === "single") {
-          spreadTypeEl.textContent = "單張牌陣";
-          document.getElementById("single-spread").classList.remove("hidden");
-        } else if (spread === "three") {
-          spreadTypeEl.textContent = "三張牌陣";
-          document.getElementById("three-spread").classList.remove("hidden");
-        } else if (spread === "celtic") {
-          spreadTypeEl.textContent = "凱爾特十字牌陣";
-          document.getElementById("celtic-spread").classList.remove("hidden");
-        }
-      }
-
-      // 設置抽牌事件
-      function setupDrawingEvents(spreadType) {
-        const tarotDeck = document.querySelector(".tarot-card");
-        let cardsDrawn = 0;
-
-        // 計算需要抽取的牌數
-        let totalCards = 1;
-        if (spreadType === "three") {
-          totalCards = 3;
-        } else if (spreadType === "celtic") {
-          totalCards = 6;
-        }
-
-        tarotDeck.addEventListener("click", function () {
-          // 翻轉牌
-          this.classList.add("card-flipped");
-
-          cardsDrawn++;
-
-          // 更新剩餘牌數
-          if (spreadType !== "single") {
-            const remaining = totalCards - cardsDrawn;
-            document.getElementById("cards-remaining").innerHTML = `剩餘需要抽 <span class="text-gold-300 font-bold">${remaining}</span> 張牌`;
-
-            // 如果還有牌需要抽，重置牌庫
-            if (remaining > 0) {
-              setTimeout(() => {
-                tarotDeck.classList.remove("card-flipped");
-              }, 1000);
-            }
-          }
-
-          // 當抽完所有牌后
-          if (cardsDrawn >= totalCards) {
-            // 隱藏抽牌區域，顯示牌陣和解讀區域
-            setTimeout(() => {
-              document.getElementById("drawing-phase").classList.add("hidden");
-              document.getElementById("spread-display").classList.remove("hidden");
-              document.getElementById("interpretation-area").classList.remove("hidden");
-
-              // 模擬牌陣中的牌
-              populateSpread(spreadType);
-
-              // 模擬 AI 解讀
-              setTimeout(() => {
-                document.getElementById("ai-thinking").classList.add("hidden");
-                document.getElementById("ai-interpretation").classList.remove("hidden");
-                document.getElementById("save-btn").classList.remove("hidden");
-                document.getElementById("share-btn").classList.remove("hidden");
-              }, 3000);
-            }, 1500);
-          }
-        });
-      }
-
-      // 填充牌陣
-      function populateSpread(spreadType) {
-        // 這裡模擬填充牌陣的過程
-        // 實際應用中應該根據抽到的牌來填充
-
-        if (spreadType === "single") {
-          const cardPlaceholder = document.querySelector("#single-spread .card-placeholder");
-          cardPlaceholder.innerHTML = '<img src="https://via.placeholder.com/120x200/465c94/ffffff?text=愚者" alt="愚者" />';
-        } else if (spreadType === "three") {
-          const cardPlaceholders = document.querySelectorAll("#three-spread .card-placeholder");
-          cardPlaceholders.forEach((placeholder, index) => {
-            const cardNames = ["女祭司", "太陽", "節制"];
-            placeholder.innerHTML = `<img src="https://via.placeholder.com/120x200/465c94/ffffff?text=${cardNames[index]}" alt="${cardNames[index]}" />`;
-          });
-        } else if (spreadType === "celtic") {
-          const cardPlaceholders = document.querySelectorAll("#celtic-spread .card-placeholder");
-          cardPlaceholders.forEach((placeholder, index) => {
-            const cardNames = ["命運之輪", "正義", "戀人", "皇帝", "力量", "審判"];
-            placeholder.innerHTML = `<img src="https://via.placeholder.com/120x200/465c94/ffffff?text=${cardNames[index]}" alt="${cardNames[index]}" />`;
-          });
-        }
-      }
-
-      // 切換詳細解讀區塊的顯示
-      function toggleSection(id) {
-        const section = document.getElementById(id);
-        section.classList.toggle("active");
-      }
-    </script>
+    <!-- JavaScript 模組導入 -->
+    <script type="module" src="js/app.js"></script>
   </body>
 </html>

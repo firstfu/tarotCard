@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>選擇占卜 - 塔羅智慧 AI 塔羅牌占卜平台</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet" />
     <script>
       tailwind.config = {
         theme: {
@@ -126,9 +123,7 @@
           <a href="#" class="hover:text-gold-300 transition-colors">關於我們</a>
         </div>
         <div class="flex items-center space-x-4">
-          <a href="login.html" class="px-4 py-2 rounded-md border border-gold-400 text-gold-300 hover:bg-gold-400 hover:text-midnight-900 transition-colors"
-            >登入</a
-          >
+          <a href="login.html" class="px-4 py-2 rounded-md border border-gold-400 text-gold-300 hover:bg-gold-400 hover:text-midnight-900 transition-colors">登入</a>
           <a href="login.html" class="px-4 py-2 rounded-md bg-gold-400 text-midnight-900 hover:bg-gold-500 transition-colors">註冊</a>
           <button class="md:hidden text-2xl">☰</button>
         </div>
@@ -187,9 +182,7 @@
               </div>
             </div>
             <div class="bg-midnight-800/90 p-4">
-              <button class="w-full py-2 rounded bg-pink-600 hover:bg-pink-500 transition-colors text-white font-medium divination-btn" data-type="love">
-                選擇
-              </button>
+              <button class="w-full py-2 rounded bg-pink-600 hover:bg-pink-500 transition-colors text-white font-medium divination-btn" data-type="love">選擇</button>
             </div>
           </div>
 
@@ -207,9 +200,7 @@
               </div>
             </div>
             <div class="bg-midnight-800/90 p-4">
-              <button class="w-full py-2 rounded bg-blue-600 hover:bg-blue-500 transition-colors text-white font-medium divination-btn" data-type="career">
-                選擇
-              </button>
+              <button class="w-full py-2 rounded bg-blue-600 hover:bg-blue-500 transition-colors text-white font-medium divination-btn" data-type="career">選擇</button>
             </div>
           </div>
 
@@ -227,9 +218,7 @@
               </div>
             </div>
             <div class="bg-midnight-800/90 p-4">
-              <button class="w-full py-2 rounded bg-yellow-600 hover:bg-yellow-500 transition-colors text-white font-medium divination-btn" data-type="wealth">
-                選擇
-              </button>
+              <button class="w-full py-2 rounded bg-yellow-600 hover:bg-yellow-500 transition-colors text-white font-medium divination-btn" data-type="wealth">選擇</button>
             </div>
           </div>
         </div>
@@ -387,9 +376,7 @@
             </div>
 
             <div class="flex flex-col space-y-2">
-              <button id="start-divination" class="py-3 rounded-md bg-gold-400 text-midnight-900 font-bold hover:bg-gold-500 transition-colors">
-                開始占卜
-              </button>
+              <button id="start-divination" class="py-3 rounded-md bg-gold-400 text-midnight-900 font-bold hover:bg-gold-500 transition-colors">開始占卜</button>
               <button id="back-to-spread" class="py-2 rounded-md border border-gray-500 text-white hover:bg-midnight-800 transition-colors">返回</button>
             </div>
           </div>
@@ -523,11 +510,34 @@
 
         // 開始占卜按鈕
         const startDivinationBtn = document.getElementById("start-divination");
+        const questionInput = document.getElementById("question");
 
         startDivinationBtn.addEventListener("click", function () {
-          // 跳轉到抽牌頁面
-          window.location.href = "drawing.html?type=" + selectedType + "&spread=" + selectedSpread;
+          // 獲取用戶輸入的問題
+          const question = questionInput.value.trim() || "我需要關注的重要訊息是什麼？";
+
+          // 檢查是否已選擇占卜類型和牌陣
+          if (!selectedType || !selectedSpread) {
+            alert("請選擇占卜類型和牌陣！");
+            return;
+          }
+
+          // 跳轉到抽牌頁面，帶上所有參數
+          window.location.href = `drawing.html?type=${selectedType}&spread=${selectedSpread}&question=${encodeURIComponent(question)}`;
         });
+
+        // 從URL參數中獲取預設的占卜類型（如果有）
+        const urlParams = new URLSearchParams(window.location.search);
+        const presetType = urlParams.get("type");
+
+        // 如果URL中有預設的占卜類型，自動選中對應的按鈕
+        if (presetType) {
+          const typeBtn = document.querySelector(`[data-type="${presetType}"]`);
+          if (typeBtn) {
+            // 延遲執行點擊，確保頁面已完全加載
+            setTimeout(() => typeBtn.click(), 100);
+          }
+        }
 
         // 返回按鈕
         backToSpreadBtn.addEventListener("click", function () {
