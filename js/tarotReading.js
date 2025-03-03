@@ -3,48 +3,91 @@
  * 負責處理塔羅牌的抽取、解讀生成等核心功能
  */
 
-let tarotData;
-// 添加錯誤捕獲
+// 添加內置備用數據
+const FALLBACK_TAROT_DATA = {
+  majorArcana: [
+    {
+      id: 0,
+      name: "愚者",
+      nameEn: "The Fool",
+      keywords: {
+        upright: ["新開始", "冒險", "純真", "自發性"],
+        reversed: ["魯莽", "輕率", "風險", "貿然行事"],
+      },
+      meanings: {
+        upright: {
+          general: "愚者代表著新的開始、冒險和未知的可能性。它象徵著無限的潛力和開放的心態。",
+          love: "在感情方面，愚者暗示著新的浪漫可能性或關係中的新階段。",
+          career: "職業上，愚者代表著新的機會、創意思維和冒險精神。",
+          wealth: "財務上，愚者提醒我們保持靈活性和開放態度。",
+          health: "健康方面，愚者象徵活力和精神煥發。",
+        },
+        reversed: {
+          general: "逆位的愚者警告我們不要過於衝動或輕率。",
+          love: "感情中，逆位愚者可能表示衝動的決定或對關係的恐懼。",
+          career: "職業上，逆位愚者提醒我們在尋求新機會時不要太過魯莽。",
+          wealth: "財務方面，逆位愚者警告不要盲目投資或做出不理性的財務決策。",
+          health: "健康上，逆位愚者可能暗示忽視健康警訊或過於冒險的行為。",
+        },
+      },
+      symbolism: "愚者通常描繪為站在懸崖邊的年輕人，象徵著未知的冒險。",
+      imgUrl: "./assets/images/tarot/major/fool.jpg",
+    },
+    {
+      id: 1,
+      name: "魔術師",
+      nameEn: "The Magician",
+      keywords: {
+        upright: ["創造力", "意志力", "技能", "專注"],
+        reversed: ["操縱", "欺騙", "未實現的潛能", "猶豫不決"],
+      },
+      meanings: {
+        upright: {
+          general: "魔術師象徵著將想法轉化為現實的能力，代表著創造力、意志力和技能。",
+          love: "在感情上，魔術師表示你有能力創造理想的關係，吸引你想要的伴侶。",
+          career: "職業方面，魔術師代表專業技能的發揮和創新的能力。",
+          wealth: "財務上，魔術師象徵著正確運用資源和知識來實現財富增長。",
+          health: "健康方面，魔術師表示你有能力通過自律和專注改善健康。",
+        },
+        reversed: {
+          general: "逆位的魔術師可能暗示操縱、欺騙或未實現的潛能。",
+          love: "感情中，逆位魔術師可能表示操縱行為或不誠實。",
+          career: "職業上，逆位魔術師可能代表技能未被充分利用或缺乏專注。",
+          wealth: "財務方面，逆位魔術師警告可能存在欺騙或資源誤用的情況。",
+          health: "健康上，逆位魔術師可能暗示缺乏自律或對健康問題的忽視。",
+        },
+      },
+      symbolism: "魔術師通常站在一張裝有各種工具的桌前，象徵著他掌握了實現目標所需的所有資源。",
+      imgUrl: "./assets/images/tarot/major/magician.jpg",
+    },
+  ],
+};
+
+// 初始化tarotData為內置備用數據
+let tarotData = FALLBACK_TAROT_DATA;
+
+// 嘗試動態導入正式數據
 try {
   console.log("正在導入 tarotData.js...");
   // 使用動態import
   import("./tarotData.js")
     .then(module => {
       console.log("tarotData 動態導入成功");
-      tarotData = module.default;
-      console.log("tarotData 設置完成", tarotData ? "有效" : "無效");
+      // 只有在成功導入時才替換
+      if (module && module.default) {
+        tarotData = module.default;
+        console.log("tarotData 設置完成: 使用正式資料");
+      } else {
+        console.warn("tarotData 模塊導入成功但格式不正確，使用備用數據");
+      }
     })
     .catch(error => {
       console.error("tarotData.js 動態導入失敗:", error);
-      setupFallbackData();
+      console.log("繼續使用內置備用數據");
     });
 } catch (error) {
   console.error("tarotData.js 導入嘗試失敗:", error);
-  setupFallbackData();
-}
-
-function setupFallbackData() {
-  console.log("設置後備數據");
-  // 創建一個簡單的後備數據結構
-  tarotData = {
-    majorArcana: [
-      {
-        id: 0,
-        name: "愚者 (備用數據)",
-        nameEn: "The Fool",
-        keywords: {
-          upright: ["新開始", "冒險"],
-          reversed: ["魯莽", "輕率"],
-        },
-        meanings: {
-          upright: { general: "愚者代表著新的開始" },
-          reversed: { general: "逆位的愚者警告不要過於衝動" },
-        },
-        symbolism: "愚者的象徵",
-        imgUrl: "https://via.placeholder.com/150/FF0000/FFFFFF?text=愚者",
-      },
-    ],
-  };
+  console.log("使用內置備用數據");
 }
 
 class TarotReading {
@@ -56,12 +99,10 @@ class TarotReading {
     this.selectedCards = []; // 已選擇的卡牌
     this.deckReady = false; // 牌庫是否準備好（洗牌完成）
 
-    // 確認 tarotData 是否可用
-    if (!tarotData || !tarotData.majorArcana || !tarotData.majorArcana.length) {
-      console.error("tarotData 不可用或格式不正確");
-      throw new Error("塔羅牌數據不可用，請檢查數據文件");
-    } else {
-      console.log(`tarotData 可用，共有 ${tarotData.majorArcana.length} 張大阿爾卡納牌`);
+    // 確保在實例化時有數據可用
+    if (!tarotData) {
+      console.warn("tarotData未就緒，使用備用數據");
+      tarotData = FALLBACK_TAROT_DATA;
     }
   }
 
@@ -103,13 +144,13 @@ class TarotReading {
     }
 
     try {
-      // 確認 tarotData 是否可用
+      // 確保有數據可用
       if (!tarotData || !tarotData.majorArcana || !tarotData.majorArcana.length) {
-        console.error("抽牌時 tarotData 不可用");
-        throw new Error("塔羅牌數據不可用，無法抽牌");
+        console.warn("抽牌時數據不可用，使用備用數據");
+        tarotData = FALLBACK_TAROT_DATA;
       }
 
-      // 抽取主要阿爾卡納牌（暫時只使用大阿爾卡納牌）
+      // 抽取主要阿爾卡納牌
       const majorArcanaLength = tarotData.majorArcana.length;
       console.log(`可用大阿爾卡納牌: ${majorArcanaLength} 張`);
 
@@ -130,7 +171,24 @@ class TarotReading {
       return card;
     } catch (error) {
       console.error("抽牌過程中發生錯誤:", error);
-      throw new Error(`抽取塔羅牌時發生錯誤: ${error.message}`);
+
+      // 創建一個緊急備用卡牌
+      const fallbackCard = {
+        id: 999,
+        name: "緊急備用卡",
+        nameEn: "Emergency Card",
+        keywords: { upright: ["恢復", "應急"], reversed: ["錯誤", "失敗"] },
+        meanings: {
+          upright: { general: "這是一個系統生成的備用卡片，表示原本的卡片生成過程出現問題。" },
+          reversed: { general: "這是一個系統生成的備用卡片，表示原本的卡片生成過程出現問題。" },
+        },
+        symbolism: "緊急恢復",
+        imgUrl: "https://via.placeholder.com/150/FF0000/FFFFFF?text=Error",
+        isReversed: false,
+      };
+
+      this.selectedCards.push(fallbackCard);
+      return fallbackCard;
     }
   }
 

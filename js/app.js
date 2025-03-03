@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("TarotReading 實例創建成功", tarotService);
 
     // 初始化全局變量
-    let cardsRequired = 0; // 需要抽取的卡牌數量
+    var cardsRequired = 0; // 需要抽取的卡牌數量
     let cardsDrawn = 0; // 已抽取的卡牌數量
 
     // 解析URL參數，獲取占卜類型和牌陣類型
