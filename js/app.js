@@ -6,52 +6,129 @@
 import TarotReading from "./tarotReading.js";
 
 document.addEventListener("DOMContentLoaded", function () {
+  console.log("DOMContentLoaded 事件觸發 - 初始化應用程序");
   // 實例化塔羅解讀服務
-  const tarotService = new TarotReading();
+  try {
+    console.log("正在創建 TarotReading 實例...");
+    const tarotService = new TarotReading();
+    console.log("TarotReading 實例創建成功", tarotService);
 
-  // 初始化全局變量
-  let cardsRequired = 0; // 需要抽取的卡牌數量
-  let cardsDrawn = 0; // 已抽取的卡牌數量
+    // 初始化全局變量
+    let cardsRequired = 0; // 需要抽取的卡牌數量
+    let cardsDrawn = 0; // 已抽取的卡牌數量
 
-  // 解析URL參數，獲取占卜類型和牌陣類型
-  const urlParams = new URLSearchParams(window.location.search);
-  const divinationType = urlParams.get("type") || "general";
-  const spreadType = urlParams.get("spread") || "single";
-  const userQuestion = urlParams.get("question") || "我需要關注的重要訊息是什麼？";
+    // 解析URL參數，獲取占卜類型和牌陣類型
+    const urlParams = new URLSearchParams(window.location.search);
+    const divinationType = urlParams.get("type") || "general";
+    const spreadType = urlParams.get("spread") || "single";
+    const userQuestion = urlParams.get("question") || "我需要關注的重要訊息是什麼？";
 
-  // 更新頁面顯示
-  updateDivinationInfo(divinationType, spreadType, userQuestion);
+    console.log("URL參數解析:", { divinationType, spreadType, userQuestion });
 
-  // 設置牌陣顯示
-  setupSpreadDisplay(spreadType);
+    // 更新頁面顯示
+    updateDivinationInfo(divinationType, spreadType, userQuestion);
 
-  // 初始化塔羅服務，模擬洗牌過程
-  tarotService
-    .initialize(divinationType, spreadType, userQuestion)
-    .then(() => {
-      // 洗牌完成後顯示牌庫
-      document.getElementById("shuffle-indicator").classList.add("hidden");
-      document.getElementById("tarot-deck-container").classList.remove("hidden");
-      document.getElementById("draw-instruction").classList.remove("hidden");
+    // 設置牌陣顯示
+    setupSpreadDisplay(spreadType);
 
-      // 如非單張牌陣，顯示剩餘牌數
-      if (spreadType !== "single") {
-        document.getElementById("cards-remaining").classList.remove("hidden");
+    // 初始化塔羅服務
+    // 手動初始化，不使用Promise
+    console.log("初始化塔羅服務屬性...");
+    tarotService.divinationType = divinationType;
+    tarotService.spreadType = spreadType;
+    tarotService.userQuestion = userQuestion;
+    tarotService.selectedCards = [];
 
-        // 更新剩餘卡牌數量顯示
-        const remainingEl = document.getElementById("cards-remaining");
-        if (remainingEl) {
-          remainingEl.innerHTML = `剩餘需要抽 <span class="text-gold-300 font-bold">${cardsRequired}</span> 張牌`;
+    // 直接使用setTimeout模擬洗牌時間
+    console.log("開始洗牌倒計時 (3秒)...");
+
+    // 添加一個檢查DOM元素是否存在的函數
+    function checkAndUpdateUI() {
+      console.log("正在檢查DOM元素...");
+
+      // 設置牌庫準備好
+      tarotService.deckReady = true;
+      console.log("牌庫準備狀態已設置為:", tarotService.deckReady);
+
+      // 檢查所有需要的DOM元素
+      const shuffleIndicator = document.getElementById("shuffle-indicator");
+      const deckContainer = document.getElementById("tarot-deck-container");
+      const drawInstruction = document.getElementById("draw-instruction");
+
+      const allElementsExist = shuffleIndicator && deckContainer && drawInstruction;
+
+      if (allElementsExist) {
+        console.log("所有必要DOM元素都存在，正在更新UI...");
+
+        // 隱藏洗牌指示器
+        console.log("隱藏洗牌指示器...");
+        shuffleIndicator.classList.add("hidden");
+
+        // 顯示牌庫容器
+        console.log("顯示牌庫容器...");
+        deckContainer.classList.remove("hidden");
+
+        // 顯示抽牌引導
+        console.log("顯示抽牌引導...");
+        drawInstruction.classList.remove("hidden");
+
+        // 如非單張牌陣，顯示剩餘牌數
+        if (spreadType !== "single") {
+          const remainingElement = document.getElementById("cards-remaining");
+          if (remainingElement) {
+            console.log("顯示剩餘牌數...");
+            remainingElement.classList.remove("hidden");
+            remainingElement.innerHTML = `剩餘需要抽 <span class="text-gold-300 font-bold">${cardsRequired}</span> 張牌`;
+          }
         }
+
+        // 設置抽牌事件
+        console.log("設置抽牌事件處理...");
+        setupDrawingEvents(spreadType, tarotService);
+
+        return true; // 更新成功
+      } else {
+        console.warn("部分DOM元素不存在:", {
+          shuffleIndicator: !!shuffleIndicator,
+          deckContainer: !!deckContainer,
+          drawInstruction: !!drawInstruction,
+        });
+        return false; // 更新失敗
+      }
+    }
+
+    // 使用一個重試機制
+    let retryCount = 0;
+    const maxRetries = 5;
+    const retryInterval = 1000; // 1秒
+
+    function attemptUIUpdate() {
+      if (retryCount >= maxRetries) {
+        console.error(`已嘗試 ${maxRetries} 次更新UI但失敗，可能存在DOM元素缺失或其他問題`);
+        alert("頁面載入出現問題，請重新整理再試");
+        return;
       }
 
-      // 設置抽牌事件
-      setupDrawingEvents(spreadType, tarotService);
-    })
-    .catch(error => {
-      console.error("初始化失敗：", error);
-      alert("初始化失敗，請重新載入頁面");
-    });
+      console.log(`嘗試更新UI (第 ${retryCount + 1} 次)...`);
+
+      if (checkAndUpdateUI()) {
+        console.log("UI更新成功!");
+      } else {
+        retryCount++;
+        console.log(`UI更新失敗，${retryInterval / 1000}秒後重試...`);
+        setTimeout(attemptUIUpdate, retryInterval);
+      }
+    }
+
+    // 先等待洗牌時間，然後開始UI更新嘗試
+    setTimeout(() => {
+      console.log("洗牌倒計時結束，準備更新UI...");
+      attemptUIUpdate();
+    }, 3000);
+  } catch (error) {
+    console.error("應用程序初始化失敗:", error);
+    alert("應用程序初始化失敗: " + error.message);
+  }
 
   /**
    * 更新占卜信息顯示
@@ -142,72 +219,101 @@ document.addEventListener("DOMContentLoaded", function () {
    * @param {Object} tarotService - 塔羅解讀服務實例
    */
   function setupDrawingEvents(spreadType, tarotService) {
+    console.log("進入setupDrawingEvents函數");
     const tarotDeck = document.querySelector("#tarot-deck-container .tarot-card");
 
     if (!tarotDeck) {
-      console.error("找不到塔羅牌庫元素！");
+      console.error("找不到塔羅牌庫元素！(#tarot-deck-container .tarot-card)");
       return;
     }
 
     console.log("設置抽牌事件，卡牌要求數量:", cardsRequired);
 
+    // 確保初始狀態正確
+    tarotDeck.classList.remove("card-flipped");
+
     tarotDeck.addEventListener("click", function () {
+      console.log("牌庫被點擊");
       // 防止重複點擊已翻轉的卡牌
       if (this.classList.contains("card-flipped")) {
+        console.log("卡牌已經翻轉，忽略點擊");
         return;
       }
 
-      // 翻轉卡牌
-      this.classList.add("card-flipped");
-
-      // 抽取一張塔羅牌
-      const card = tarotService.drawCard();
-
-      // 顯示牌面
-      displayCardFace(this, card);
-
-      cardsDrawn++;
-      console.log(`已抽取 ${cardsDrawn}/${cardsRequired} 張牌`);
-
-      // 更新剩餘牌數顯示
-      if (spreadType !== "single") {
-        const remaining = cardsRequired - cardsDrawn;
-        const remainingEl = document.getElementById("cards-remaining");
-        if (remainingEl) {
-          remainingEl.innerHTML = `剩餘需要抽 <span class="text-gold-300 font-bold">${remaining}</span> 張牌`;
-        }
-
-        // 如果還需要抽牌，延遲後重置牌庫狀態
-        if (remaining > 0) {
-          setTimeout(() => {
-            tarotDeck.classList.remove("card-flipped");
-            // 重置牌面為背面
-            const cardFront = tarotDeck.querySelector(".tarot-card-front");
-            if (cardFront) {
-              cardFront.innerHTML = "";
-            }
-          }, 1000);
-        }
+      // 檢查牌庫是否準備好
+      if (!tarotService.deckReady) {
+        console.warn("牌庫尚未準備好，無法抽牌");
+        alert("牌庫尚未準備好，請稍候...");
+        return;
       }
 
-      // 當抽完所有所需的牌後
-      if (cardsDrawn >= cardsRequired) {
-        setTimeout(() => {
-          // 隱藏抽牌區域，顯示牌陣和解讀區域
-          document.getElementById("drawing-phase").classList.add("hidden");
-          document.getElementById("spread-display").classList.remove("hidden");
-          document.getElementById("interpretation-area").classList.remove("hidden");
+      try {
+        console.log("開始抽牌流程...");
+        // 翻轉卡牌
+        this.classList.add("card-flipped");
 
-          // 在牌陣中顯示抽到的卡牌
-          displayCardsInSpread(tarotService.selectedCards, spreadType);
+        // 抽取一張塔羅牌
+        console.log("調用tarotService.drawCard()");
+        const card = tarotService.drawCard();
+        console.log("抽到的牌:", card);
 
-          // 生成並顯示解讀結果
-          generateAndDisplayReading(tarotService);
+        // 顯示牌面
+        displayCardFace(this, card);
 
-          // 顯示功能按鈕
-          document.getElementById("save-btn").classList.remove("hidden");
-          document.getElementById("share-btn").classList.remove("hidden");
-        }, 1500);
+        cardsDrawn++;
+        console.log(`已抽取 ${cardsDrawn}/${cardsRequired} 張牌`);
+
+        // 更新剩餘牌數顯示
+        if (spreadType !== "single") {
+          const remaining = cardsRequired - cardsDrawn;
+          const remainingEl = document.getElementById("cards-remaining");
+          if (remainingEl) {
+            remainingEl.innerHTML = `剩餘需要抽 <span class="text-gold-300 font-bold">${remaining}</span> 張牌`;
+          }
+
+          // 如果還需要抽牌，延遲後重置牌庫狀態
+          if (remaining > 0) {
+            setTimeout(() => {
+              this.classList.remove("card-flipped");
+              // 重置牌面為背面
+              const cardFront = this.querySelector(".tarot-card-front");
+              if (cardFront) {
+                cardFront.innerHTML = "";
+              }
+            }, 1500);
+          }
+        }
+
+        // 當抽完所有所需的牌後
+        if (cardsDrawn >= cardsRequired) {
+          setTimeout(() => {
+            // 隱藏抽牌區域，顯示牌陣和解讀區域
+            const drawingPhase = document.getElementById("drawing-phase");
+            if (drawingPhase) drawingPhase.classList.add("hidden");
+
+            const spreadDisplay = document.getElementById("spread-display");
+            if (spreadDisplay) spreadDisplay.classList.remove("hidden");
+
+            const interpretationArea = document.getElementById("interpretation-area");
+            if (interpretationArea) interpretationArea.classList.remove("hidden");
+
+            // 在牌陣中顯示抽到的卡牌
+            displayCardsInSpread(tarotService.selectedCards, spreadType);
+
+            // 生成並顯示解讀結果
+            generateAndDisplayReading(tarotService);
+
+            // 顯示功能按鈕
+            const saveBtn = document.getElementById("save-btn");
+            if (saveBtn) saveBtn.classList.remove("hidden");
+
+            const shareBtn = document.getElementById("share-btn");
+            if (shareBtn) shareBtn.classList.remove("hidden");
+          }, 1500);
+        }
+      } catch (error) {
+        console.error("抽牌過程中發生錯誤:", error);
+        alert("抽牌時發生錯誤：" + error.message);
       }
     });
   }

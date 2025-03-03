@@ -458,7 +458,53 @@
       </div>
     </footer>
 
+    <!-- 錯誤提示對話框 -->
+    <div id="error-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+      <div class="fixed inset-0 bg-black bg-opacity-70"></div>
+      <div class="relative bg-midnight-800 rounded-lg p-6 max-w-md mx-4 shadow-2xl border border-gold-400">
+        <h3 class="text-gold-300 text-xl font-bold mb-4">系統提示</h3>
+        <p id="error-message" class="text-white mb-6">應用載入時發生錯誤，請稍後再試。</p>
+        <div class="flex justify-end">
+          <button id="error-close" class="px-4 py-2 bg-gold-400 text-midnight-900 rounded-md font-semibold hover:bg-gold-500 transition-colors">確定</button>
+        </div>
+      </div>
+    </div>
+
     <!-- JavaScript 模組導入 -->
+    <script>
+      // 添加全局錯誤處理
+      window.addEventListener("error", function (event) {
+        console.error("全局錯誤捕獲:", event.error || event.message);
+        showErrorMessage("應用程序發生錯誤，請重新整理頁面後再試。");
+      });
+
+      // 處理模塊加載失敗的情況
+      window.addEventListener("unhandledrejection", function (event) {
+        console.error("未處理的Promise拒絕:", event.reason);
+        if (event.reason && event.reason.message && event.reason.message.includes("import")) {
+          showErrorMessage("無法載入必要的模組，請確保您的瀏覽器支援ES模組並允許JavaScript運行。");
+        }
+      });
+
+      function showErrorMessage(message) {
+        const errorModal = document.getElementById("error-modal");
+        const errorMessage = document.getElementById("error-message");
+        const errorClose = document.getElementById("error-close");
+
+        if (errorModal && errorMessage) {
+          errorMessage.textContent = message;
+          errorModal.classList.remove("hidden");
+
+          if (errorClose) {
+            errorClose.onclick = function () {
+              errorModal.classList.add("hidden");
+            };
+          }
+        } else {
+          alert(message);
+        }
+      }
+    </script>
     <script type="module" src="js/app.js"></script>
   </body>
 </html>

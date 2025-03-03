@@ -3,15 +3,66 @@
  * 負責處理塔羅牌的抽取、解讀生成等核心功能
  */
 
-import tarotData from "./tarotData.js";
+let tarotData;
+// 添加錯誤捕獲
+try {
+  console.log("正在導入 tarotData.js...");
+  // 使用動態import
+  import("./tarotData.js")
+    .then(module => {
+      console.log("tarotData 動態導入成功");
+      tarotData = module.default;
+      console.log("tarotData 設置完成", tarotData ? "有效" : "無效");
+    })
+    .catch(error => {
+      console.error("tarotData.js 動態導入失敗:", error);
+      setupFallbackData();
+    });
+} catch (error) {
+  console.error("tarotData.js 導入嘗試失敗:", error);
+  setupFallbackData();
+}
+
+function setupFallbackData() {
+  console.log("設置後備數據");
+  // 創建一個簡單的後備數據結構
+  tarotData = {
+    majorArcana: [
+      {
+        id: 0,
+        name: "愚者 (備用數據)",
+        nameEn: "The Fool",
+        keywords: {
+          upright: ["新開始", "冒險"],
+          reversed: ["魯莽", "輕率"],
+        },
+        meanings: {
+          upright: { general: "愚者代表著新的開始" },
+          reversed: { general: "逆位的愚者警告不要過於衝動" },
+        },
+        symbolism: "愚者的象徵",
+        imgUrl: "https://via.placeholder.com/150/FF0000/FFFFFF?text=愚者",
+      },
+    ],
+  };
+}
 
 class TarotReading {
   constructor() {
+    console.log("TarotReading 類被實例化");
     this.divinationType = ""; // 占卜類型（愛情、事業、財運等）
     this.spreadType = ""; // 牌陣類型（單張、三張、凱爾特十字等）
     this.userQuestion = ""; // 用戶問題
     this.selectedCards = []; // 已選擇的卡牌
     this.deckReady = false; // 牌庫是否準備好（洗牌完成）
+
+    // 確認 tarotData 是否可用
+    if (!tarotData || !tarotData.majorArcana || !tarotData.majorArcana.length) {
+      console.error("tarotData 不可用或格式不正確");
+      throw new Error("塔羅牌數據不可用，請檢查數據文件");
+    } else {
+      console.log(`tarotData 可用，共有 ${tarotData.majorArcana.length} 張大阿爾卡納牌`);
+    }
   }
 
   /**
@@ -21,6 +72,7 @@ class TarotReading {
    * @param {string} userQuestion - 用戶問題
    */
   initialize(divinationType, spreadType, userQuestion) {
+    console.log("TarotReading.initialize() 被調用", { divinationType, spreadType, userQuestion });
     this.divinationType = divinationType;
     this.spreadType = spreadType;
     this.userQuestion = userQuestion;
@@ -28,7 +80,9 @@ class TarotReading {
 
     // 返回一個延遲解決的Promise，模擬洗牌時間
     return new Promise(resolve => {
+      console.log("洗牌過程開始 (Promise)...");
       setTimeout(() => {
+        console.log("洗牌過程完成 (Promise)");
         this.deckReady = true;
         resolve(true);
       }, 3000); // 洗牌時間設為3秒
@@ -41,22 +95,43 @@ class TarotReading {
    * @returns {Object} 抽出的牌的信息
    */
   drawCard(isReversed = Math.random() < 0.2) {
+    console.log("TarotReading.drawCard() 被調用", { isReversed, deckReady: this.deckReady });
+
     if (!this.deckReady) {
+      console.error("抽牌時牌庫未準備好");
       throw new Error("牌庫尚未準備好，請先完成洗牌");
     }
 
-    // 抽取主要阿爾卡納牌（暫時只使用大阿爾卡納牌）
-    const majorArcanaLength = tarotData.majorArcana.length;
-    const randomIndex = Math.floor(Math.random() * majorArcanaLength);
-    const card = { ...tarotData.majorArcana[randomIndex] };
+    try {
+      // 確認 tarotData 是否可用
+      if (!tarotData || !tarotData.majorArcana || !tarotData.majorArcana.length) {
+        console.error("抽牌時 tarotData 不可用");
+        throw new Error("塔羅牌數據不可用，無法抽牌");
+      }
 
-    // 設置牌的正逆位
-    card.isReversed = isReversed;
+      // 抽取主要阿爾卡納牌（暫時只使用大阿爾卡納牌）
+      const majorArcanaLength = tarotData.majorArcana.length;
+      console.log(`可用大阿爾卡納牌: ${majorArcanaLength} 張`);
 
-    // 將牌添加到已選擇的牌組中
-    this.selectedCards.push(card);
+      const randomIndex = Math.floor(Math.random() * majorArcanaLength);
+      console.log(`隨機抽取索引: ${randomIndex}`);
 
-    return card;
+      const card = { ...tarotData.majorArcana[randomIndex] };
+      console.log(`抽到的牌: ${card.name}`);
+
+      // 設置牌的正逆位
+      card.isReversed = isReversed;
+      console.log(`牌的正逆位: ${isReversed ? "逆位" : "正位"}`);
+
+      // 將牌添加到已選擇的牌組中
+      this.selectedCards.push(card);
+      console.log(`當前已選擇 ${this.selectedCards.length} 張牌`);
+
+      return card;
+    } catch (error) {
+      console.error("抽牌過程中發生錯誤:", error);
+      throw new Error(`抽取塔羅牌時發生錯誤: ${error.message}`);
+    }
   }
 
   /**
